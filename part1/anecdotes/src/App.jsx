@@ -35,7 +35,7 @@ const App = () => {
       <button onClick={handleVote}>Vote</button>
       <button onClick={handleNextAnecdote}>Next Anecdote</button>
       <h2>Anecdote with the most votes</h2>
-      <p>{mostVotedAnecdote} has {Math.max(...votes)}</p>
+      <p>{mostVotedAnecdote} has {Math.max(...votes)} votes</p>
     </div>
   )
 }
