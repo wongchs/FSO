@@ -1,15 +1,18 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import personService from "./services/persons";
+import "./index.css";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
+import Notification from "./components/Notification";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
+  const [notification, setNotification] = useState(null);
+  const [notificationType, setNotificationType] = useState("");
 
   useEffect(() => {
     personService.getAll().then((initialPersons) => setPersons(initialPersons));
@@ -36,6 +39,22 @@ const App = () => {
                 person.id !== existingPerson.id ? person : returnedPerson
               )
             );
+            setNotification(`Updated ${updatedPerson.name}`);
+            setNotificationType("success");
+            setTimeout(() => {
+              setNotification(null);
+            }, 5000);
+          })
+          .catch((error) => {
+            setNotification(
+              `Information of '${updatedPerson.name}' has already been removed from server`
+            );
+            setNotificationType("error");
+            setTimeout(() => {
+              setNotification(null);
+            }, 5000);
+            setNewName("");
+            setNewNumber("");
           });
       }
     } else {
@@ -49,6 +68,11 @@ const App = () => {
         setPersons(persons.concat(returnedPersons));
         setNewName("");
         setNewNumber("");
+        setNotification(`Added ${newName}`);
+        setNotificationType("success");
+        setTimeout(() => {
+          setNotification(null);
+        }, 5000);
       });
     }
   };
@@ -79,6 +103,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification notification={notification} type={notificationType} />
       <Filter value={filter} onChange={handleFilterChange} />
       <h3>add a new</h3>
       <PersonForm
