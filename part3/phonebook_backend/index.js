@@ -13,6 +13,8 @@ morgan.token("body", function (req, res) {
   return JSON.stringify(req.body);
 });
 
+app.use(express.static("dist"));
+
 let persons = [
   {
     id: 1,
@@ -37,7 +39,7 @@ let persons = [
 ];
 
 app.get("/", (request, response) => {
-  response.send("<h1>Heil World!</h1>");
+  response.send("<h1>visit /api/persons for API</h1>");
 });
 
 app.get("/api/persons", (request, response) => {
