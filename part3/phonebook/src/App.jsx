@@ -64,16 +64,25 @@ const App = () => {
         id: persons.length + 1,
       };
 
-      personService.create(person).then((returnedPersons) => {
-        setPersons(persons.concat(returnedPersons));
-        setNewName("");
-        setNewNumber("");
-        setNotification(`Added ${newName}`);
-        setNotificationType("success");
-        setTimeout(() => {
-          setNotification(null);
-        }, 5000);
-      });
+      personService
+        .create(person)
+        .then((returnedPersons) => {
+          setPersons(persons.concat(returnedPersons));
+          setNewName("");
+          setNewNumber("");
+          setNotification(`Added ${newName}`);
+          setNotificationType("success");
+          setTimeout(() => {
+            setNotification(null);
+          }, 5000);
+        })
+        .catch((error) => {
+          setNotification(`Error: ${error.response.data.error}`);
+          setNotificationType("error");
+          setTimeout(() => {
+            setNotification(null);
+          }, 5000);
+        });
     }
   };
 
