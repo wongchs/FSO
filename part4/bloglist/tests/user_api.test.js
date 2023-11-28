@@ -6,6 +6,10 @@ const app = require("../app");
 const api = supertest(app);
 const User = require("../models/user");
 
+beforeEach(async () => {
+  await User.deleteMany({});
+});
+
 test("invalid users are not created", async () => {
   const newUser = {
     username: "ab",
@@ -21,4 +25,8 @@ test("invalid users are not created", async () => {
 
   const response = await api.get("/api/users");
   expect(response.body).toHaveLength(0);
+});
+
+afterAll(async () => {
+  await mongoose.connection.close();
 });
