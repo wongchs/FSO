@@ -70,6 +70,27 @@ const App = () => {
     setTimeout(() => setNotification({ message: null, type: null }), 5000);
   };
 
+  const updateBlog = (blogObject) => {
+    console.log(blogObject);
+    blogService.update(blogObject.id, blogObject).then((returnedBlog) => {
+      returnedBlog.user = user;
+      setBlogs(
+        blogs.map((blog) => (blog.id !== returnedBlog.id ? blog : returnedBlog))
+      );
+    });
+  };
+
+  const deleteBlog = (id) => {
+    const blog = blogs.find((blog) => blog.id === id);
+
+    if (window.confirm(`Delete ${blog.title}?`)) {
+      blogService.deleteObject(id).then(() => {
+        const updatedBlogs = blogs.filter((blog) => blog.id !== id);
+        setBlogs(updatedBlogs);
+      });
+    }
+  };
+
   if (user === null) {
     return (
       <div>
@@ -100,9 +121,16 @@ const App = () => {
       <Togglable buttonLabel="new blog" ref={blogFormRef}>
         <BlogForm createBlog={addBlog} />
       </Togglable>
-      {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
-      ))}
+      {blogs
+        .sort((a, b) => b.likes - a.likes)
+        .map((blog) => (
+          <Blog
+            key={blog.id}
+            blog={blog}
+            updateBlog={updateBlog}
+            deleteBlog={deleteBlog}
+          />
+        ))}
     </div>
   );
 };

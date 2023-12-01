@@ -62,7 +62,7 @@ blogsRouter.delete("/:id", middleware.userExtractor, async (request, response) =
   }
 });
 
-blogsRouter.put("/:id", middleware.userExtractor, async (request, response) => {
+blogsRouter.put("/:id", async (request, response) => {
   const body = request.body;
 
   const blog = {
