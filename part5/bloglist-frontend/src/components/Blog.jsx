@@ -12,9 +12,6 @@ const Blog = ({ blog, updateBlog, deleteBlog }) => {
 
   const [visible, setVisible] = useState(false);
 
-  const hideWhenVisible = { display: visible ? "none" : "" };
-  const showWhenVisible = { display: visible ? "" : "none" };
-
   const toggleVisibility = () => {
     setVisible(!visible);
   };
@@ -30,21 +27,21 @@ const Blog = ({ blog, updateBlog, deleteBlog }) => {
   };
 
   return (
-    <div style={blogStyle}>
-      <div style={hideWhenVisible}>
+    <div style={blogStyle} className="blog">
+      <div>
         {blog.title} {blog.author}{" "}
-        <button onClick={toggleVisibility}>view</button>
+        <button onClick={toggleVisibility} className="togglableContent">{visible ? "hide" : "view"}</button>
       </div>
-      <div style={showWhenVisible}>
-        {blog.title} {blog.author}{" "}
-        <button onClick={toggleVisibility}>hide</button>
-        <p>{blog.url}</p>
-        <p>
-          {blog.likes} likes <button onClick={handleLike}>like</button>
-        </p>
-        <p> {username}</p>
-        <button onClick={() => deleteBlog(blog.id)}>delete</button>
-      </div>
+      {visible && (
+        <div>
+          <p>{blog.url}</p>
+          <p>
+            {blog.likes} likes <button onClick={handleLike}>like</button>
+          </p>
+          <p> {username}</p>
+          <button onClick={() => deleteBlog(blog.id)}>delete</button>
+        </div>
+      )}
     </div>
   );
 };
