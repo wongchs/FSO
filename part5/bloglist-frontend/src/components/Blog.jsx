@@ -1,7 +1,7 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
 
-const Blog = ({ blog, updateBlog, deleteBlog }) => {
+const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -30,16 +30,20 @@ const Blog = ({ blog, updateBlog, deleteBlog }) => {
     <div style={blogStyle} className="blog">
       <div>
         {blog.title} {blog.author}{" "}
-        <button onClick={toggleVisibility} className="togglableContent">{visible ? "hide" : "view"}</button>
+        <button onClick={toggleVisibility} className="togglableContent">
+          {visible ? "hide" : "view"}
+        </button>
       </div>
       {visible && (
         <div>
           <p>{blog.url}</p>
-          <p>
+          <p className="likes">
             {blog.likes} likes <button onClick={handleLike}>like</button>
           </p>
           <p> {username}</p>
-          <button onClick={() => deleteBlog(blog.id)}>delete</button>
+          {user.username === blog.user.username && (
+            <button onClick={() => deleteBlog(blog.id)}>delete</button>
+          )}
         </div>
       )}
     </div>
