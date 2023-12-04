@@ -1,3 +1,5 @@
+import { createSlice } from "@reduxjs/toolkit";
+
 const anecdotesAtStart = [
   "If it hurts, do it more often",
   "Adding manpower to a late software project makes it later!",
@@ -35,7 +37,7 @@ const anecdoteReducer = (state = initialState, action) => {
         anecdote.id !== id ? anecdote : changedAnecdote
       );
     case "NEW ANECDOTE":
-      return [...state, action.payload];
+      return state.concat(action.payload);
     default:
       return state;
   }
@@ -51,16 +53,16 @@ export const createAnecdote = (content) => {
     payload: {
       content,
       votes: 0,
-      id: generateId()
-    }
-  }
-}
+      id: generateId(),
+    },
+  };
+};
 
 export const addVotes = (id) => {
   return {
     type: "VOTE",
-    payload: { id }
-  }
-}
+    payload: { id },
+  };
+};
 
 export default anecdoteReducer;
