@@ -16,17 +16,13 @@ const AnecdoteList = () => {
   });
   const dispatch = useDispatch();
 
-  const notificationTimeout = (message) => {
-    dispatch(setNotification(message));
-    setTimeout(() => {
-      dispatch(clearNotification());
-    }, 5000);
-  };
-
   const vote = (id) => {
     console.log("vote", id);
     dispatch(addVotes({ id }));
-    notificationTimeout(`You voted for anecdote with id ${id}`);
+    dispatch(setNotification(`You voted for anecdote with id ${id}`));
+    setTimeout(() => {
+      dispatch(clearNotification());
+    }, 5000);
   };
 
   return (
