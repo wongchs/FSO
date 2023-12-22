@@ -1,18 +1,31 @@
+import {
+  useNotificationValue,
+  useNotificationDispatch,
+} from "../NotificationContext";
+import { useEffect } from "react";
+
 const Notification = () => {
   const style = {
-    border: 'solid',
+    border: "solid",
     padding: 10,
     borderWidth: 1,
-    marginBottom: 5
-  }
-  
-  if (true) return null
+    marginBottom: 5,
+  };
+  const notification = useNotificationValue();
+  const dispatch = useNotificationDispatch();
 
-  return (
-    <div style={style}>
-      
-    </div>
-  )
-}
+  useEffect(() => {
+    if (notification) {
+      const timer = setTimeout(() => {
+        dispatch({ type: "CLEAR_NOTIFICATION" });
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [notification]);
 
-export default Notification
+  if (!notification) return null;
+
+  return <div style={style}>{notification}</div>;
+};
+
+export default Notification;
