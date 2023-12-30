@@ -22,6 +22,7 @@ import Users from "./components/Users";
 import User from "./components/User";
 import userService from "./services/users";
 import BlogDetail from "./components/BlogDetail";
+import Menu from "./components/Menu";
 
 const App = () => {
   const [username, setUsername] = useState("");
@@ -134,6 +135,7 @@ const App = () => {
   }
   return (
     <div>
+      <Menu />
       <h2>blogs</h2>
       <Notification
         notification={notification.message}
