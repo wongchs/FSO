@@ -17,12 +17,15 @@ import {
   removeBlog,
 } from "./reducers/blogReducer";
 import { userLogin, userLogout, login } from "./reducers/userReducer";
-import { Route, Routes, Link } from "react-router-dom";
+import { Route, Routes, Link, useMatch } from "react-router-dom";
 import Users from "./components/Users";
+import User from "./components/User";
+import userService from "./services/users";
 
 const App = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [users, setUsers] = useState([]);
   const blogFormRef = useRef();
   const dispatch = useDispatch();
   const notification = useSelector((state) => state.notification);
@@ -32,6 +35,10 @@ const App = () => {
   useEffect(() => {
     dispatch(initializedBlogs());
   }, [dispatch]);
+
+  useEffect(() => {
+    userService.getAll().then((users) => setUsers(users));
+  }, []);
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedBlogUser");
@@ -97,6 +104,15 @@ const App = () => {
     }
   };
 
+  const match = useMatch("/users/:id");
+  const matchedUser = match
+    ? users.find((user) => user.id === match.params.id)
+    : null;
+
+  console.log(matchedUser);
+  console.log(match);
+  console.log(users)
+
   if (user === null) {
     return (
       <div>
@@ -125,7 +141,8 @@ const App = () => {
         {user.name} logged in <button onClick={handleLogout}>logout</button>
       </p>
       <Routes>
-        <Route path="/users" element={<Users />} />
+        <Route path="/users" element={<Users users={users} />} />
+        <Route path="/users/:id" element={<User user={matchedUser} />} />
         <Route
           path="/"
           element={
