@@ -1,4 +1,11 @@
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { createComment } from "../reducers/blogReducer";
+
 const BlogDetail = ({ blog, updateBlog }) => {
+  const [newComment, setNewComment] = useState("");
+  const dispatch = useDispatch();
+
   if (!blog) {
     return <div>loading</div>;
   }
@@ -13,6 +20,16 @@ const BlogDetail = ({ blog, updateBlog }) => {
     updateBlog(updatedBlog);
   };
 
+  const handleCommentSubmit = (event) => {
+    event.preventDefault();
+    const updatedBlog = {
+      ...blog,
+      comments: blog.comments.concat(newComment),
+    };
+    dispatch(createComment(updatedBlog.id, newComment));
+    setNewComment("");
+  };
+
   return (
     <div>
       <h1>{blog.title}</h1>
@@ -23,10 +40,17 @@ const BlogDetail = ({ blog, updateBlog }) => {
       <p>added by {blog.author}</p>
       <br />
       <h2>comments</h2>
+      <form onSubmit={handleCommentSubmit}>
+        <input
+          type="text"
+          value={newComment}
+          onChange={({ target }) => setNewComment(target.value)}
+        />
+        <button type="submit">add comment</button>
+      </form>
       <ul>
-        {blog.comments.map((comment, index) => (
-          <li key={index}>{comment}</li>
-        ))}
+        {blog.comments &&
+          blog.comments.map((comment, index) => <li key={index}>{comment}</li>)}
       </ul>
     </div>
   );

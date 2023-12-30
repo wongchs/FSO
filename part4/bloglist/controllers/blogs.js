@@ -93,7 +93,7 @@ blogsRouter.post("/:id/comments", async (request, response) => {
   if (blog) {
     blog.comments.push(body.comment);
     await blog.save();
-    response.status(201).json(blog);
+    response.status(201).json(body.comment);
   } else {
     response.status(404).end();
   }
