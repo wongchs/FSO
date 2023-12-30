@@ -8,7 +8,6 @@ import Blog from "./components/Blog";
 import Notification from "./components/Notification";
 import LoginForm from "./components/LoginForm";
 import blogService from "./services/blogs";
-import loginService from "./services/login";
 import BlogForm from "./components/BlogForm";
 import Togglable from "./components/Togglable";
 import {
@@ -18,6 +17,8 @@ import {
   removeBlog,
 } from "./reducers/blogReducer";
 import { userLogin, userLogout, login } from "./reducers/userReducer";
+import { Route, Routes, Link } from "react-router-dom";
+import Users from "./components/Users";
 
 const App = () => {
   const [username, setUsername] = useState("");
@@ -123,20 +124,30 @@ const App = () => {
       <p>
         {user.name} logged in <button onClick={handleLogout}>logout</button>
       </p>
-      <Togglable buttonLabel="new blog" ref={blogFormRef}>
-        <BlogForm createBlog={addBlog} />
-      </Togglable>
-      {[...blogs]
-        .sort((a, b) => b.likes - a.likes)
-        .map((blog) => (
-          <Blog
-            key={blog.id}
-            blog={blog}
-            updateBlog={updateBlog}
-            deleteBlog={deleteBlog}
-            user={user}
-          />
-        ))}
+      <Routes>
+        <Route path="/users" element={<Users />} />
+        <Route
+          path="/"
+          element={
+            <>
+              <Togglable buttonLabel="new blog" ref={blogFormRef}>
+                <BlogForm createBlog={addBlog} />
+              </Togglable>
+              {[...blogs]
+                .sort((a, b) => b.likes - a.likes)
+                .map((blog) => (
+                  <Blog
+                    key={blog.id}
+                    blog={blog}
+                    updateBlog={updateBlog}
+                    deleteBlog={deleteBlog}
+                    user={user}
+                  />
+                ))}
+            </>
+          }
+        />
+      </Routes>
     </div>
   );
 };
