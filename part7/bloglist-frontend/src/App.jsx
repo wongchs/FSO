@@ -17,15 +17,16 @@ import {
   initializedBlogs,
   removeBlog,
 } from "./reducers/blogReducer";
+import { userLogin, userLogout, login } from "./reducers/userReducer";
 
 const App = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [user, setUser] = useState(null);
   const blogFormRef = useRef();
   const dispatch = useDispatch();
   const notification = useSelector((state) => state.notification);
   const blogs = useSelector((state) => state.blog);
+  const user = useSelector((state) => state.user);
 
   useEffect(() => {
     dispatch(initializedBlogs());
@@ -35,25 +36,18 @@ const App = () => {
     const loggedUserJSON = window.localStorage.getItem("loggedBlogUser");
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
-      setUser(user);
+      dispatch(login(user));
       blogService.setToken(user.token);
     }
-  }, []);
+  }, [dispatch]);
 
-  const handleLogin = async (event) => {
+  const handleLogin = (event) => {
     event.preventDefault();
-
     try {
-      const user = await loginService.login({
-        username,
-        password,
-      });
-      window.localStorage.setItem("loggedBlogUser", JSON.stringify(user));
-      setUser(user);
+      dispatch(userLogin(username, password));
       setUsername("");
-      dispatch(
-        setNotification({ message: `welcome ${user.name}`, type: "success" })
-      );
+      setPassword("");
+      console.log("good");
     } catch (exception) {
       dispatch(
         setNotification({
@@ -61,14 +55,19 @@ const App = () => {
           type: "error",
         })
       );
+      console.log("bad");
     }
     setTimeout(() => dispatch(clearNotification()), 5000);
   };
 
-  const handleLogout = async (event) => {
+  const handleLogout = (event) => {
     event.preventDefault();
-    window.localStorage.removeItem("loggedBlogUser");
-    setUser(null);
+    dispatch(userLogout()).then(() => {
+      dispatch(
+        setNotification({ message: `logout successful`, type: "success" })
+      );
+    });
+    setTimeout(() => dispatch(clearNotification()), 5000);
   };
 
   const addBlog = (blogObject) => {
