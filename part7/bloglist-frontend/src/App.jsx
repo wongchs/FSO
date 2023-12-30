@@ -21,6 +21,7 @@ import { Route, Routes, Link, useMatch } from "react-router-dom";
 import Users from "./components/Users";
 import User from "./components/User";
 import userService from "./services/users";
+import BlogDetail from "./components/BlogDetail";
 
 const App = () => {
   const [username, setUsername] = useState("");
@@ -109,9 +110,10 @@ const App = () => {
     ? users.find((user) => user.id === match.params.id)
     : null;
 
-  console.log(matchedUser);
-  console.log(match);
-  console.log(users)
+  const blogMatch = useMatch("/blogs/:id");
+  const matchedBlog = blogMatch
+    ? blogs.find((blog) => blog.id === blogMatch.params.id)
+    : null;
 
   if (user === null) {
     return (
@@ -144,6 +146,10 @@ const App = () => {
         <Route path="/users" element={<Users users={users} />} />
         <Route path="/users/:id" element={<User user={matchedUser} />} />
         <Route
+          path="/blogs/:id"
+          element={<BlogDetail blog={matchedBlog} updateBlog={updateBlog} />}
+        />
+        <Route
           path="/"
           element={
             <>
@@ -156,9 +162,6 @@ const App = () => {
                   <Blog
                     key={blog.id}
                     blog={blog}
-                    updateBlog={updateBlog}
-                    deleteBlog={deleteBlog}
-                    user={user}
                   />
                 ))}
             </>
