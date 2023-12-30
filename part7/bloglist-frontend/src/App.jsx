@@ -11,7 +11,12 @@ import blogService from "./services/blogs";
 import loginService from "./services/login";
 import BlogForm from "./components/BlogForm";
 import Togglable from "./components/Togglable";
-import { initializedBlogs } from "./reducers/blogReducer";
+import {
+  addLikes,
+  createBlog,
+  initializedBlogs,
+  removeBlog,
+} from "./reducers/blogReducer";
 
 const App = () => {
   const [username, setUsername] = useState("");
@@ -68,9 +73,7 @@ const App = () => {
 
   const addBlog = (blogObject) => {
     blogFormRef.current.toggleVisibility();
-    blogService.create(blogObject).then((returnedBlog) => {
-      returnedBlog.user = user;
-      setBlogs(blogs.concat(returnedBlog));
+    dispatch(createBlog(blogObject, user)).then(() => {
       dispatch(
         setNotification({
           message: `a new blog ${blogObject.title} by ${blogObject.author} added`,
@@ -83,22 +86,14 @@ const App = () => {
 
   const updateBlog = (blogObject) => {
     console.log(blogObject);
-    blogService.update(blogObject.id, blogObject).then((returnedBlog) => {
-      returnedBlog.user = user;
-      setBlogs(
-        blogs.map((blog) => (blog.id !== returnedBlog.id ? blog : returnedBlog))
-      );
-    });
+    dispatch(addLikes(blogObject, user));
   };
 
   const deleteBlog = (id) => {
     const blog = blogs.find((blog) => blog.id === id);
 
     if (window.confirm(`Delete ${blog.title}?`)) {
-      blogService.deleteObject(id).then(() => {
-        const updatedBlogs = blogs.filter((blog) => blog.id !== id);
-        setBlogs(updatedBlogs);
-      });
+      dispatch(removeBlog(id));
     }
   };
 
