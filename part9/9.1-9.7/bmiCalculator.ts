@@ -1,3 +1,7 @@
+const args = process.argv.slice(2);
+const height = Number(args[0]);
+const weight = Number(args[1]);
+
 const calculateBmi = (height: number, weight: number): string => {
   let bmi = weight / Math.pow(height / 100, 2);
   if (bmi < 18.5) {
@@ -12,3 +16,4 @@ const calculateBmi = (height: number, weight: number): string => {
 };
 
 console.log(calculateBmi(180, 74));
+console.log(calculateBmi(height, weight));
