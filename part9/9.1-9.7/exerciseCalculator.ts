@@ -1,4 +1,4 @@
-interface Result {
+export interface Result {
   periodLength: number;
   trainingDays: number;
   success: boolean;
@@ -12,7 +12,7 @@ const args = process.argv.slice(2);
 const target = Number(args[0]);
 const dailyHours = args.slice(1).map(Number);
 
-const calculateExercises = (dailyHours: number[], target: number): Result => {
+export const calculateExercises = (dailyHours: number[], target: number): Result => {
   const periodLength = dailyHours.length;
   const trainingDays = dailyHours.filter((hour) => hour > 0).length;
   const average = dailyHours.reduce((a, b) => a + b, 0) / periodLength;

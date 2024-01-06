@@ -3,7 +3,7 @@ const height = Number(args[0]);
 const weight = Number(args[1]);
 
 export const calculateBmi = (height: number, weight: number): string => {
-  let bmi = weight / Math.pow(height / 100, 2);
+  const bmi = weight / Math.pow(height / 100, 2);
   if (bmi < 18.5) {
     return "Underweight";
   } else if (bmi >= 18.5 && bmi < 25) {
