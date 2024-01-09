@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import { DiaryEntry } from "./types";
+import { DiaryEntry, Visibility, Weather } from "./types";
 import { addDiary, getDiaries } from "./services/diaryService";
 import axios from "axios";
 
 function App() {
   const [diaries, setDiaries] = useState<DiaryEntry[]>([]);
   const [date, setDate] = useState("");
-  const [weather, setWeather] = useState("");
-  const [visibility, setVisibility] = useState("");
+  const [weather, setWeather] = useState<Weather>(Weather.Sunny);
+  const [visibility, setVisibility] = useState<Visibility>(Visibility.Great);
   const [comment, setComment] = useState("");
   const [error, setError] = useState<string | null>(null);
 
@@ -17,7 +17,7 @@ function App() {
     });
   });
 
-  const createDiary = (event) => {
+  const createDiary = (event: React.FormEvent) => {
     event.preventDefault();
     const newDiary = {
       date,
@@ -57,17 +57,31 @@ function App() {
           </p>
           <p>
             weather{" "}
-            <input
-              value={weather}
-              onChange={(event) => setWeather(event.target.value)}
-            />
+            {Object.values(Weather).map((weatherOption) => (
+              <label key={weatherOption}>
+                <input
+                  type="radio"
+                  value={weatherOption}
+                  checked={weather === weatherOption}
+                  onChange={() => setWeather(weatherOption)}
+                />
+                {weatherOption}
+              </label>
+            ))}
           </p>
           <p>
             visibility{" "}
-            <input
-              value={visibility}
-              onChange={(event) => setVisibility(event.target.value)}
-            />
+            {Object.values(Visibility).map((visibilityOption) => (
+              <label key={visibilityOption}>
+                <input
+                  type="radio"
+                  value={visibilityOption}
+                  checked={visibility === visibilityOption}
+                  onChange={() => setVisibility(visibilityOption)}
+                />
+                {visibilityOption}
+              </label>
+            ))}
           </p>
           <p>
             comment{" "}
