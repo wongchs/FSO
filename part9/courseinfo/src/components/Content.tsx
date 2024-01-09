@@ -1,10 +1,10 @@
-const Content = ({ courseParts }) => {
+import Part from "./Part";
+
+const Content = (props: { courseParts: CoursePart[] }) => {
   return (
     <div>
-      {courseParts.map((part) => (
-        <p key={part.name}>
-          {part.name} {part.exerciseCount}
-        </p>
+      {props.courseParts.map((part) => (
+        <Part key={part.name} part={part} />
       ))}
     </div>
   );
