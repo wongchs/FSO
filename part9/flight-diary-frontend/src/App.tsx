@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
 import { DiaryEntry } from "./types";
 import { addDiary, getDiaries } from "./services/diaryService";
+import axios from "axios";
 
 function App() {
   const [diaries, setDiaries] = useState<DiaryEntry[]>([]);
-  const [newDiary, setNewDiary] = useState("");
   const [date, setDate] = useState("");
   const [weather, setWeather] = useState("");
   const [visibility, setVisibility] = useState("");
   const [comment, setComment] = useState("");
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     getDiaries().then((data) => {
@@ -24,15 +25,28 @@ function App() {
       visibility,
       comment,
     };
-    addDiary(newDiary).then((addedDiary) => {
-      setDiaries(diaries.concat(addedDiary));
-    });
+    addDiary(newDiary)
+      .then((addedDiary) => {
+        setDiaries(diaries.concat(addedDiary));
+        setError(null);
+      })
+      .catch((error) => {
+        if (axios.isAxiosError(error)) {
+          setError(error.response?.data);
+          setTimeout(() => {
+            setError("");
+          }, 5000);
+        } else {
+          console.error(error);
+        }
+      });
   };
 
   return (
     <>
       <div>
         <form onSubmit={createDiary}>
+          {error && <p style={{ color: "red" }}>{error}</p>}
           <p>
             date{" "}
             <input
