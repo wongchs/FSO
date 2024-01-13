@@ -33,21 +33,12 @@ interface BaseEntry {
   date: string;
   specialist: string;
   diagnosisCodes?: Array<Diagnosis["code"]>;
+  diagnosis?: Array<Diagnosis>;
 }
 
 interface HealthCheckEntry extends BaseEntry {
   type: "HealthCheck";
   healthCheckRating: HealthCheckRating;
-}
-
-export interface Discharge {
-  date: string;
-  criteria: string;
-}
-
-interface HospitalEntry extends BaseEntry {
-  type: "Hospital";
-  discharge: Discharge;
 }
 
 export interface SickLeave {
@@ -61,9 +52,19 @@ interface OccupationalHealthcareEntry extends BaseEntry {
   sickLeave?: SickLeave;
 }
 
+export interface Discharge {
+  date: string;
+  criteria: string;
+}
+
+interface HospitalEntry extends BaseEntry {
+  type: "Hospital";
+  discharge: Discharge;
+}
+
 export type Entry =
-  | HospitalEntry
-  | OccupationalHealthcareEntry
-  | HealthCheckEntry;
+| HealthCheckEntry
+| OccupationalHealthcareEntry
+| HospitalEntry;
 
 export type PatientFormValues = Omit<Patient, "id" | "entries">;
