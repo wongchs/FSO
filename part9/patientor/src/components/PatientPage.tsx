@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import patientService from "../services/patients";
 import { Entry, Patient } from "../types";
 import EntryDetails from "./EntryDetails";
+import HospitalEntryForm from "./HospitalEntryForm";
 
 const PatientPage = () => {
   const { id } = useParams();
@@ -22,32 +23,28 @@ const PatientPage = () => {
     return <div>Loading...</div>;
   }
 
+  const addEntry = (newEntry: Entry) => {
+    setPatient((oldPatient) => {
+      if (oldPatient === null) {
+        console.error("Patient is null");
+        return null;
+      }
+      return {
+        ...oldPatient,
+        entries: [...oldPatient.entries, newEntry],
+      };
+    });
+  };
+
   return (
     <div>
       <h2>{patient.name}</h2>
       <p>Gender: {patient.gender}</p>
       <p>SSN: {patient.ssn}</p>
       <p>Occupation: {patient.occupation}</p>
+      <HospitalEntryForm addEntry={addEntry} />
       <h3>Entries</h3>
       {patient.entries.map((entry: Entry) => (
-        // <div key={entry.id}>
-        //   <p>Date: {entry.date}</p>
-        //   <p>Description: {entry.description}</p>
-        //   {entry.diagnosisCodes && (
-        //     <ul>
-        //       {entry.diagnosisCodes.map((code, index) => {
-        //         const diagnosis = diagnoses.find(
-        //           (d: { code: string }) => d.code === code
-        //         );
-        //         return (
-        //           <li key={index}>
-        //             {code} {diagnosis?.name}
-        //           </li>
-        //         );
-        //       })}
-        //     </ul>
-        //   )}
-        // </div>
         <div key={entry.id}>
           <EntryDetails entry={entry} />
         </div>

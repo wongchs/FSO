@@ -12,7 +12,13 @@ const OccupationalHealthcareEntry = ({ entry }: Props) => {
       <p>{entry.description}</p>
       <p>treatment type: {entry.type}</p>
       <p>employer: {entry.employerName}</p>
-      <p>{entry.diagnosisCodes}</p>
+      <ul>
+        {entry.diagnosis?.map((diagnose) => (
+          <li key={diagnose.code}>
+            {diagnose.code} {diagnose.name}
+          </li>
+        ))}
+      </ul>
       <p>diagnosed by {entry.specialist}</p>
     </Box>
   );

@@ -27,7 +27,13 @@ const HealthCheckEntry = ({ entry }: Props) => {
         health rating:{" "}
         <Favorite style={{ color: getHeartColor(entry.healthCheckRating) }} />
       </p>
-      <p>{entry.diagnosisCodes}</p>
+      <ul>
+        {entry.diagnosis?.map((diagnose) => (
+          <li key={diagnose.code}>
+            {diagnose.code} {diagnose.name}
+          </li>
+        ))}
+      </ul>
       <p>diagnosed by {entry.specialist}</p>
     </Box>
   );
