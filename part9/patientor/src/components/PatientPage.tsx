@@ -1,17 +1,19 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import patientService from "../services/patients";
-import { Entry, EntryWithoutId, Patient } from "../types";
+import { Diagnosis, Entry, EntryWithoutId, Patient } from "../types";
 import EntryDetails from "./EntryDetails";
 import HospitalEntryForm from "./HospitalEntryForm";
 import OccupationalHealthcareEntryForm from "./OccupationalHealthcareEntryForm";
 import HealthCheckEntryForm from "./HealthCheckEntryForm";
+import diagnosisService from "../services/diagnosis";
 
 const PatientPage = () => {
   const { id } = useParams();
   const [patient, setPatient] = useState<Patient | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [entryType, setEntryType] = useState<Entry["type"]>("Hospital");
+  const [diagnosisData, setDiagnosisData] = useState<Diagnosis[]>([]);
 
   useEffect(() => {
     const fetchPatient = async () => {
@@ -20,7 +22,14 @@ const PatientPage = () => {
         setPatient(fetchedPatient);
       }
     };
+
+    const fetchDiagnosisData = async () => {
+      const data = await diagnosisService.getAll();
+      setDiagnosisData(data);
+    };
+
     fetchPatient();
+    fetchDiagnosisData();
   }, [id]);
 
   const addEntry = async (newEntry: EntryWithoutId) => {
@@ -64,12 +73,20 @@ const PatientPage = () => {
           <option value="HealthCheck">Health Check</option>
         </select>
       </label>
-      {entryType === "Hospital" && <HospitalEntryForm addEntry={addEntry} />}
+      {entryType === "Hospital" && (
+        <HospitalEntryForm addEntry={addEntry} diagnosisData={diagnosisData} />
+      )}
       {entryType === "OccupationalHealthcare" && (
-        <OccupationalHealthcareEntryForm addEntry={addEntry} />
+        <OccupationalHealthcareEntryForm
+          addEntry={addEntry}
+          diagnosisData={diagnosisData}
+        />
       )}
       {entryType === "HealthCheck" && (
-        <HealthCheckEntryForm addEntry={addEntry} />
+        <HealthCheckEntryForm
+          addEntry={addEntry}
+          diagnosisData={diagnosisData}
+        />
       )}
       <h3>Entries</h3>
       {patient.entries.map((entry: Entry) => (

@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { EntryWithoutId, HealthCheckRating } from "../types";
+import { Diagnosis, EntryWithoutId, HealthCheckRating } from "../types";
 
 interface Props {
   addEntry: (entry: EntryWithoutId) => void;
+  diagnosisData: Diagnosis[];
 }
 
-const HealthCheckEntryForm = ({ addEntry }: Props) => {
+const HealthCheckEntryForm = ({ addEntry, diagnosisData }: Props) => {
   const [description, setDescription] = useState("");
   const [date, setDate] = useState("");
   const [specialist, setSpecialist] = useState("");
@@ -54,11 +55,21 @@ const HealthCheckEntryForm = ({ addEntry }: Props) => {
       </label>
       <label>
         Diagnosis Codes:
-        <input
-          type="text"
-          value={diagnosisCodes.join(",")}
-          onChange={(e) => setDiagnosisCodes(e.target.value.split(","))}
-        />
+        <select
+          multiple
+          value={diagnosisCodes}
+          onChange={(e) =>
+            setDiagnosisCodes(
+              Array.from(e.target.selectedOptions, (option) => option.value)
+            )
+          }
+        >
+          {diagnosisData.map((diagnosis) => (
+            <option key={diagnosis.code} value={diagnosis.code}>
+              {diagnosis.code}: {diagnosis.name}
+            </option>
+          ))}
+        </select>
       </label>
       <label>
         Health Rating:
