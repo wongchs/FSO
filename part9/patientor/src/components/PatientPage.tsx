@@ -4,11 +4,14 @@ import patientService from "../services/patients";
 import { Entry, EntryWithoutId, Patient } from "../types";
 import EntryDetails from "./EntryDetails";
 import HospitalEntryForm from "./HospitalEntryForm";
+import OccupationalHealthcareEntryForm from "./OccupationalHealthcareEntryForm";
+import HealthCheckEntryForm from "./HealthCheckEntryForm";
 
 const PatientPage = () => {
   const { id } = useParams();
   const [patient, setPatient] = useState<Patient | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [entryType, setEntryType] = useState<Entry["type"]>("Hospital");
 
   useEffect(() => {
     const fetchPatient = async () => {
@@ -48,7 +51,26 @@ const PatientPage = () => {
       <p>SSN: {patient.ssn}</p>
       <p>Occupation: {patient.occupation}</p>
       {errorMessage && <p>{errorMessage}</p>}
-      <HospitalEntryForm addEntry={addEntry} />
+      <label>
+        Entry Type:
+        <select
+          value={entryType}
+          onChange={(e) => setEntryType(e.target.value as Entry["type"])}
+        >
+          <option value="Hospital">Hospital</option>
+          <option value="OccupationalHealthcare">
+            Occupational Healthcare
+          </option>
+          <option value="HealthCheck">Health Check</option>
+        </select>
+      </label>
+      {entryType === "Hospital" && <HospitalEntryForm addEntry={addEntry} />}
+      {entryType === "OccupationalHealthcare" && (
+        <OccupationalHealthcareEntryForm addEntry={addEntry} />
+      )}
+      {entryType === "HealthCheck" && (
+        <HealthCheckEntryForm addEntry={addEntry} />
+      )}
       <h3>Entries</h3>
       {patient.entries.map((entry: Entry) => (
         <div key={entry.id}>

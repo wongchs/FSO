@@ -5,13 +5,12 @@ interface Props {
   addEntry: (entry: EntryWithoutId) => void;
 }
 
-const HospitalEntryForm = ({ addEntry }: Props) => {
+const OccupationalHealthcareEntryForm = ({ addEntry }: Props) => {
   const [description, setDescription] = useState("");
   const [date, setDate] = useState("");
   const [specialist, setSpecialist] = useState("");
   const [diagnosisCodes, setDiagnosisCodes] = useState<Array<string>>([]);
-  const [dischargeDate, setDischargeDate] = useState("");
-  const [dischargeCriteria, setDischargeCriteria] = useState("");
+  const [employerName, setEmployerName] = useState("");
 
   const handleSubmit = (event: { preventDefault: () => void }) => {
     event.preventDefault();
@@ -20,8 +19,8 @@ const HospitalEntryForm = ({ addEntry }: Props) => {
       date,
       specialist,
       diagnosisCodes,
-      type: "Hospital",
-      discharge: { date: dischargeDate, criteria: dischargeCriteria },
+      type: "OccupationalHealthcare",
+      employerName,
     });
   };
 
@@ -60,19 +59,11 @@ const HospitalEntryForm = ({ addEntry }: Props) => {
         />
       </label>
       <label>
-        Discharge Date:
-        <input
-          type="date"
-          value={dischargeDate}
-          onChange={(e) => setDischargeDate(e.target.value)}
-        />
-      </label>
-      <label>
-        Discharge Criteria:
+        Employer Name:
         <input
           type="text"
-          value={dischargeCriteria}
-          onChange={(e) => setDischargeCriteria(e.target.value)}
+          value={employerName}
+          onChange={(e) => setEmployerName(e.target.value)}
         />
       </label>
       <button type="submit">Add Entry</button>
@@ -80,4 +71,4 @@ const HospitalEntryForm = ({ addEntry }: Props) => {
   );
 };
 
-export default HospitalEntryForm;
+export default OccupationalHealthcareEntryForm;

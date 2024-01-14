@@ -1,17 +1,18 @@
 import { useState } from "react";
-import { EntryWithoutId } from "../types";
+import { EntryWithoutId, HealthCheckRating } from "../types";
 
 interface Props {
   addEntry: (entry: EntryWithoutId) => void;
 }
 
-const HospitalEntryForm = ({ addEntry }: Props) => {
+const HealthCheckEntryForm = ({ addEntry }: Props) => {
   const [description, setDescription] = useState("");
   const [date, setDate] = useState("");
   const [specialist, setSpecialist] = useState("");
   const [diagnosisCodes, setDiagnosisCodes] = useState<Array<string>>([]);
-  const [dischargeDate, setDischargeDate] = useState("");
-  const [dischargeCriteria, setDischargeCriteria] = useState("");
+  const [healthCheckRating, setHealthCheckRating] = useState<HealthCheckRating>(
+    HealthCheckRating.Healthy
+  );
 
   const handleSubmit = (event: { preventDefault: () => void }) => {
     event.preventDefault();
@@ -20,8 +21,8 @@ const HospitalEntryForm = ({ addEntry }: Props) => {
       date,
       specialist,
       diagnosisCodes,
-      type: "Hospital",
-      discharge: { date: dischargeDate, criteria: dischargeCriteria },
+      type: "HealthCheck",
+      healthCheckRating,
     });
   };
 
@@ -60,19 +61,15 @@ const HospitalEntryForm = ({ addEntry }: Props) => {
         />
       </label>
       <label>
-        Discharge Date:
+        Health Rating:
         <input
-          type="date"
-          value={dischargeDate}
-          onChange={(e) => setDischargeDate(e.target.value)}
-        />
-      </label>
-      <label>
-        Discharge Criteria:
-        <input
-          type="text"
-          value={dischargeCriteria}
-          onChange={(e) => setDischargeCriteria(e.target.value)}
+          type="number"
+          min={0}
+          max={3}
+          value={healthCheckRating}
+          onChange={(e) =>
+            setHealthCheckRating(Number(e.target.value) as HealthCheckRating)
+          }
         />
       </label>
       <button type="submit">Add Entry</button>
@@ -80,4 +77,4 @@ const HospitalEntryForm = ({ addEntry }: Props) => {
   );
 };
 
-export default HospitalEntryForm;
+export default HealthCheckEntryForm;
