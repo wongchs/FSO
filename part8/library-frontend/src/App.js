@@ -36,7 +36,7 @@ const App = () => {
 
       <Notify errorMessage={errorMessage} />
 
-      <Authors show={page === 'authors'} />
+      <Authors setError={notify} show={page === 'authors'} />
 
       <Books show={page === 'books'} />
 

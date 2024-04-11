@@ -1,13 +1,14 @@
-import { useQuery } from '@apollo/client';
-import { ALL_AUTHORS } from '../queries';
+import { useQuery } from "@apollo/client";
+import { ALL_AUTHORS } from "../queries";
+import AuthorYearForm from "./AuthorYearForm";
 
-const Authors = (props) => {
+const Authors = ({ show, setError}) => {
   const { loading, error, data } = useQuery(ALL_AUTHORS);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
 
-  if (!props.show) {
+  if (!show) {
     return null;
   }
   return (
@@ -29,6 +30,7 @@ const Authors = (props) => {
           ))}
         </tbody>
       </table>
+      <AuthorYearForm setError={setError} />
     </div>
   );
 };
