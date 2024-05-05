@@ -20,7 +20,6 @@ mongoose
     console.log("error connection to MongoDB:", error.message);
   });
 
-
 const typeDefs = `
 type Author {
   name: String!
@@ -67,25 +66,41 @@ const resolvers = {
   Mutation: {
     addBook: async (root, args) => {
       const author = await Author.findOne({ name: args.author });
+
       if (!author) {
-        const newAuthor = new Author({ name: args.author });
-        await newAuthor.save();
-        args.author = newAuthor;
+        try {
+          const newAuthor = new Author({ name: args.author });
+          await newAuthor.save();
+          args.author = newAuthor;
+        } catch (error) {
+          throw new GraphQLError(error.message);
+        }
       } else {
         args.author = author;
       }
 
-      const book = new Book({ ...args });
-      return book.save();
+      try {
+        const book = new Book({ ...args });
+        await book.save();
+        return book;
+      } catch (error) {
+        throw new GraphQLError(error.message);
+      }
     },
     editAuthor: async (root, args) => {
       const author = await Author.findOne({ name: args.name });
+
       if (!author) {
         return null;
       }
 
-      author.born = args.setBornTo;
-      return author.save();
+      try {
+        author.born = args.setBornTo;
+        await author.save();
+        return author;
+      } catch (error) {
+        throw new GraphQLError(error.message);
+      }
     },
   },
   Author: {
