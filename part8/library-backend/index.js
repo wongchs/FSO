@@ -151,7 +151,6 @@ const resolvers = {
     },
     login: async (root, args) => {
       const user = await User.findOne({ username: args.username });
-
       if (!user || args.password !== HARDCODED_PASSWORD) {
         throw new UserInputError("wrong credentials");
       }
@@ -159,7 +158,6 @@ const resolvers = {
         username: user.username,
         id: user._id,
       };
-
       return { value: jwt.sign(userForToken, JWT_SECRET) };
     },
   },
